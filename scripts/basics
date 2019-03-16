@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status.
+set -x  # All executed commands are printed to the terminal
+
+# Create the user 'postgres' with uid 1000
+adduser --uid 1000 --disabled-password --shell=/bin/bash --gecos "PostgreSQL administrator" --no-create-home --home /var/lib/postgresql postgres
+mkdir -m 755 -p /var/lib/postgresql
+chown postgres:postgres /var/lib/postgresql
+
+aptitude update ; aptitude install -y postgresql phppgadmin
+service postgresql start
+su - postgres -c "psql -c \"alter user postgres with password 'postgres';\""
+service postgresql stop
+
+# PostgreSQL listens on all networks
+sed -i "59d" /etc/postgresql/11/main/postgresql.conf
+sed -i "59ilisten_addresses = '*'\t\t\t# what IP address(es) to listen on;" /etc/postgresql/11/main/postgresql.conf
+sed -i "92d" /etc/postgresql/11/main/pg_hba.conf
+sed -i "92ihost    all             all             0.0.0.0/0               md5" /etc/postgresql/11/main/pg_hba.conf
+
+# Enable login with user 'postgres' in phpPgAdmin
+sed -i "s/conf\['extra_login_security'\] = true/conf['extra_login_security'] = false/" /usr/share/phppgadmin/conf/config.inc.php
+
+# Enable access to phpPgAdmin from anywhere
+sed -i 's/Require/# Require/' /etc/apache2/conf-enabled/phppgadmin.conf
+
+apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude
