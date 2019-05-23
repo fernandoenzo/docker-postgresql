@@ -5,8 +5,6 @@ set -x  # All executed commands are printed to the terminal
 
 # Create the user 'postgres' with uid 1000
 adduser --uid 1000 --disabled-password --shell=/bin/bash --gecos "PostgreSQL administrator" --no-create-home --home /var/lib/postgresql postgres
-mkdir -m 755 -p /var/lib/postgresql
-chown postgres:postgres /var/lib/postgresql
 
 aptitude update ; aptitude install -y postgresql phppgadmin
 service postgresql start
