@@ -6,16 +6,16 @@ set -x  # All executed commands are printed to the terminal
 # Create the user 'postgres' with uid 1000
 adduser --uid 1000 --disabled-password --shell=/bin/bash --gecos "PostgreSQL administrator" --no-create-home --home /var/lib/postgresql postgres
 
-aptitude update ; aptitude install -y postgresql-12 phppgadmin
+aptitude update ; aptitude install -y postgresql-13 phppgadmin
 service postgresql start
 su - postgres -c "psql -c \"alter user postgres with password 'postgres';\""
 service postgresql stop
 
 # PostgreSQL listens on all networks
-sed -i "59d" /etc/postgresql/12/main/postgresql.conf
-sed -i "59ilisten_addresses = '*'\t\t\t# what IP address(es) to listen on;" /etc/postgresql/12/main/postgresql.conf
-sed -i "92d" /etc/postgresql/12/main/pg_hba.conf
-sed -i "92ihost    all             all             0.0.0.0/0               md5" /etc/postgresql/12/main/pg_hba.conf
+sed -i "59d" /etc/postgresql/13/main/postgresql.conf
+sed -i "59ilisten_addresses = '*'\t\t\t# what IP address(es) to listen on;" /etc/postgresql/13/main/postgresql.conf
+sed -i "92d" /etc/postgresql/13/main/pg_hba.conf
+sed -i "92ihost    all             all             0.0.0.0/0               md5" /etc/postgresql/13/main/pg_hba.conf
 
 # Enable login with user 'postgres' in phpPgAdmin
 sed -i "s/conf\['extra_login_security'\] = true/conf['extra_login_security'] = false/" /usr/share/phppgadmin/conf/config.inc.php
