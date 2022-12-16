@@ -20,6 +20,9 @@ sed -i "92ihost    all             all             0.0.0.0/0               md5" 
 # Enable login with user 'postgres' in phpPgAdmin
 sed -i "s/conf\['extra_login_security'\] = true/conf['extra_login_security'] = false/" /usr/share/phppgadmin/conf/config.inc.php
 
+# Fix phpPgAdmin to make it work with PostgreSQL 15
+sed -i "79i\            case '15': return 'Postgres';break;" /usr/share/phppgadmin/classes/database/Connection.php
+
 # Enable access to phpPgAdmin from anywhere
 sed -i 's/Require/# Require/' /etc/apache2/conf-enabled/phppgadmin.conf
 
