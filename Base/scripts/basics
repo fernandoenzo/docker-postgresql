@@ -3,6 +3,11 @@
 set -e  # Exit immediately if a command exits with a non-zero status.
 set -x  # All executed commands are printed to the terminal
 
+gpg --no-default-keyring --keyring /tmp/temp.keyring --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
+gpg -o /etc/apt/keyrings/postgresql.gpg --export --no-default-keyring --keyring /tmp/temp.keyring
+echo "deb [signed-by=/etc/apt/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgresql.list
+echo -e "Package: *\nPin: release o=apt.postgresql.org\nPin-Priority: -900\n" > /etc/apt/preferences.d/postgresql
+
 # Create the user 'postgres' with uid 1000
 adduser --uid 1000 --disabled-password --shell=/bin/bash --gecos "PostgreSQL administrator" --no-create-home --home /var/lib/postgresql postgres
 
