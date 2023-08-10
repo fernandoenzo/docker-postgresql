@@ -12,6 +12,6 @@ service postgresql stop
 # wget -O "/tmp/get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 # python3 /tmp/get-pip.py
 
-
 apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude /root/.wget-hsts /root/.cache
+

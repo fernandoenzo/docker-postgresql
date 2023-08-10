@@ -3,6 +3,8 @@
 set -e  # Exit immediately if a command exits with a non-zero status.
 set -x  # All executed commands are printed to the terminal
 
+cp /tmp/scripts/boot /usr/local/boot
+
 gpg --no-default-keyring --keyring /tmp/temp.keyring --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
 gpg -o /etc/apt/keyrings/postgresql.gpg --export --no-default-keyring --keyring /tmp/temp.keyring
 echo "deb [signed-by=/etc/apt/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgresql.list
@@ -33,3 +35,4 @@ sed -i 's/Require/# Require/' /etc/apache2/conf-enabled/phppgadmin.conf
 
 apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude
+
