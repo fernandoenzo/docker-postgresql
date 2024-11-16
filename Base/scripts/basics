@@ -10,6 +10,8 @@ gpg -o /etc/apt/keyrings/postgresql.gpg --export --no-default-keyring --keyring 
 echo "deb [signed-by=/etc/apt/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgresql.list
 echo -e "Package: *\nPin: release o=apt.postgresql.org\nPin-Priority: -900\n" > /etc/apt/preferences.d/postgresql
 
+sed -i 's/Suites: bookworm bookworm-updates/Suites: bookworm bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources
+
 # Create the user 'postgres' with uid 1000
 adduser --uid 1000 --disabled-password --shell=/bin/bash --gecos "PostgreSQL administrator" --no-create-home --home /var/lib/postgresql postgres
 
@@ -28,7 +30,7 @@ sed -i "92ihost    all             all             0.0.0.0/0               md5" 
 sed -i "s/conf\['extra_login_security'\] = true/conf['extra_login_security'] = false/" /usr/share/phppgadmin/conf/config.inc.php
 
 # Fix phpPgAdmin to make it work with PostgreSQL 15
-sed -i "79i\            case '15': return 'Postgres';break;" /usr/share/phppgadmin/classes/database/Connection.php
+sed -i "78i\                        case '15': return 'Postgres'; break;" /usr/share/phppgadmin/classes/database/Connection.php
 
 # Enable access to phpPgAdmin from anywhere
 sed -i 's/Require/# Require/' /etc/apache2/conf-enabled/phppgadmin.conf
